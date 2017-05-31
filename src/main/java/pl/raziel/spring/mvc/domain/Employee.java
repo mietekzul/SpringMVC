@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -22,6 +23,8 @@ public class Employee {
 	private Person person;
 	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<Address> addresses;
+
+	private BigDecimal salary;
 
 	public Person getPerson() {
 		return person;
@@ -41,5 +44,13 @@ public class Employee {
 
 	public Long getId() {
 		return id;
+	}
+
+	public BigDecimal getSalary() {
+		return salary;
+	}
+
+	public void setSalary(BigDecimal salary) {
+		this.salary = salary;
 	}
 }
