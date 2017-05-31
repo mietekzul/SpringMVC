@@ -15,9 +15,9 @@ public class Company {
 
 	private String name;
 	@OneToMany(cascade = CascadeType.PERSIST)
-	private List<Employee> employees;
+	private List<Person> employees;
 
-	public Company(String name, List<Employee> employees) {
+	public Company(String name, List<Person> employees) {
 		this.name = name;
 		this.employees = employees;
 	}
@@ -30,11 +30,11 @@ public class Company {
 		this.name = name;
 	}
 
-	public List<Employee> getEmployees() {
+	public List<Person> getEmployees() {
 		return employees;
 	}
 
-	public void setEmployees(List<Employee> employees) {
+	public void setEmployees(List<Person> employees) {
 		this.employees = employees;
 	}
 }
