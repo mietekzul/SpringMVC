@@ -20,7 +20,7 @@ import java.util.List;
  * Created by dlok on 31/05/2017.
  */
 @RestController
-@RequestMapping(path = "/demo")
+@RequestMapping(path = "/employee")
 public class EmployeesController {
 
 	@Autowired
@@ -39,7 +39,7 @@ public class EmployeesController {
 		return new ResponseEntity<>(employeeService.addEmployee(employee), HttpStatus.CREATED);
 	}
 
-	@PutMapping(value = "/{id}/addAddressToEmployee")
+	@PutMapping(value = "/{id}/addAddress")
 	public ResponseEntity<String> addAddressToEmployee(@PathVariable("id") Long id, @RequestBody Address address) {
 		employeeService.addAddressToEmployee(id, address);
 
