@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.raziel.spring.mvc.domain.Company;
-import pl.raziel.spring.mvc.domain.Employee;
 import pl.raziel.spring.mvc.domain.Person;
 import pl.raziel.spring.mvc.repositories.CompanyRepository;
 
@@ -19,12 +18,7 @@ import java.util.stream.Collectors;
 @RestController
 public class CompanyController {
 	@Autowired
-	private final CompanyRepository companyRepository;
-
-	//    @Autowired
-	public CompanyController(CompanyRepository companyRepository) {
-		this.companyRepository = companyRepository;
-	}
+	private CompanyRepository companyRepository;
 
 	@GetMapping
 	List<Company> findALl() {
