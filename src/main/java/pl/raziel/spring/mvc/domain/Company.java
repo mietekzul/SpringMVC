@@ -17,6 +17,9 @@ public class Company {
 	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<Person> employees;
 
+	public Company() {
+	}
+
 	public Company(String name, List<Person> employees) {
 		this.name = name;
 		this.employees = employees;

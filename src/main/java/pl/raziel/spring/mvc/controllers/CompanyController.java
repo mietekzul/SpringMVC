@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@RequestMapping("companies")
+@RequestMapping("${urls.company.root}")
 @RestController
 public class CompanyController {
 	@Autowired
@@ -30,7 +30,7 @@ public class CompanyController {
 		return companyRepository.findByName(name);
 	}
 
-	@GetMapping("{companyName}/employees/{firstName}")
+	@GetMapping("{companyName}/${urls.company.employees.root}/{firstName}")
 	List<Person> findCompanyEmployeesWithFirstName(
 			@PathVariable String companyName,
 			@PathVariable("firstName") String name) {
@@ -41,7 +41,7 @@ public class CompanyController {
 				.collect(Collectors.toList());
 	}
 
-	@GetMapping("{companyName}/employees/{lastName}/{firstName}")
+	@GetMapping("{companyName}/${urls.company.employees.root}/{lastName}/{firstName}")
 	List<Person> findCompanyEmployeesWithLastNameAndFirstName(@PathVariable Map<String, String> pathVariable) {
 		return findOne(pathVariable.get("companyName"))
 				.getEmployees()
