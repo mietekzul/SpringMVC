@@ -1,6 +1,7 @@
 package pl.raziel.spring.mvc.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@RequestMapping("${urls.company.root}")
+
+@RequestMapping(value = "${urls.company.root}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 @RestController
 public class CompanyController {
 
@@ -48,7 +50,7 @@ public class CompanyController {
 				.collect(Collectors.toList());
 	}
 
-	@GetMapping("{companyName}/employees/{employeeId:\\d+}")
+	@GetMapping(value = "{companyName}/employees/{employeeId:\\d+}", produces = MediaType.APPLICATION_JSON_VALUE)
 	Employee findCompanyEmployeeWithId(
 			@PathVariable String companyName,
 			@PathVariable long employeeId
@@ -87,7 +89,7 @@ public class CompanyController {
 		return employee;
 	}
 
-	@PostMapping("{companyName}/employees")
+	@PostMapping(value = "{companyName}/employees", produces = MediaType.APPLICATION_XML_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	List<Employee> addEmployees(@PathVariable String companyName, @RequestBody AddEmployeesRequest request) {
 
 		final Company company = companyRepository.findByName(companyName);
