@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.raziel.spring.mvc.domain.Company;
 import pl.raziel.spring.mvc.domain.Employee;
 import pl.raziel.spring.mvc.repositories.CompanyRepository;
+import pl.raziel.spring.mvc.requests.AddEmployeesRequest;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -69,7 +71,7 @@ public class CompanyController {
 				.collect(Collectors.toList());
 	}
 
-	@PostMapping("{companyName}/employees")
+	@PostMapping("{companyName}/employees/create")
 	Employee addEmployee(
 			@PathVariable String companyName,
 			@RequestParam(value = "firstName", required = true) String name,
@@ -83,6 +85,32 @@ public class CompanyController {
 		Company newCompany = new Company(original.getName(), employees);
 		companyRepository.save(newCompany);
 		return employee;
+	}
+
+	@PostMapping("{companyName}/employees")
+	List<Employee> addEmployees(@PathVariable String companyName, @RequestBody AddEmployeesRequest request) {
+
+		final Company company = companyRepository.findByName(companyName);
+		List<Employee> employees = new ArrayList<>(company.getEmployees());
+		final List<Employee> newEmployees = createEmployees(request.getEmployees());
+		employees.addAll(newEmployees);
+
+		Company newCompany = new Company(company.getName(), employees);
+		companyRepository.save(newCompany);
+
+		return newEmployees;
+	}
+
+	private List<Employee> createEmployees(List<Employee> employees) {
+		return employees
+				.stream()
+				.map(employee ->
+						new Employee(
+								employee.getId(),
+								employee.getFirstName(),
+								employee.getLastName(),
+								employee.getSalary()))
+				.collect(Collectors.toList());
 	}
 
 }
