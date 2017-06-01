@@ -10,13 +10,20 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
-public class FileLinesLoader {
+class FileLinesLoader {
 	List<String> loadLines(String filePath) {
 		try {
-			return Files.readAllLines(Paths.get(new ClassPathResource(filePath).getURI()));
+			return Files.readAllLines(
+					Paths.get(
+							new ClassPathResource(
+									filePath)
+									.getURI()));
 		} catch (IOException e) {
 			throw new RuntimeException(
-					String.format("Error while reading lines from file %s", filePath));
+					String.format(
+							"Error while reading lines from file %s",
+							filePath),
+					e);
 		}
 	}
 

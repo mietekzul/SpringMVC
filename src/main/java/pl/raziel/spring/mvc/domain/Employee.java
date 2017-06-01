@@ -1,15 +1,9 @@
 package pl.raziel.spring.mvc.domain;
 
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * Created by dlok on 31/05/2017.
@@ -17,40 +11,40 @@ import java.util.List;
 @Entity
 public class Employee {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@OneToOne(cascade = CascadeType.PERSIST)
-	private Person person;
-	@OneToMany(cascade = CascadeType.PERSIST)
-	private List<Address> addresses;
-
+	private String firstName;
+	private String lastName;
 	private BigDecimal salary;
+	private static long lastEmployeeId = 0;
 
-	public Person getPerson() {
-		return person;
+
+	public Employee() {
 	}
 
-	public void setPerson(Person person) {
-		this.person = person;
-	}
-
-	public List<Address> getAddresses() {
-		return addresses;
-	}
-
-	public void setAddresses(List<Address> addresses) {
-		this.addresses = addresses;
+	public Employee(Long id, String firstName, String lastName, BigDecimal salary) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.salary = salary;
 	}
 
 	public Long getId() {
 		return id;
 	}
 
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
 	public BigDecimal getSalary() {
 		return salary;
 	}
 
-	public void setSalary(BigDecimal salary) {
-		this.salary = salary;
+	public static long getNextEmployeeId() {
+		return lastEmployeeId++;
 	}
 }

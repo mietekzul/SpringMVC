@@ -2,7 +2,7 @@ package pl.raziel.spring.mvc.utils;
 
 import org.springframework.stereotype.Service;
 import pl.raziel.spring.mvc.domain.Company;
-import pl.raziel.spring.mvc.domain.Person;
+import pl.raziel.spring.mvc.domain.Employee;
 
 import java.util.List;
 import java.util.Random;
@@ -15,10 +15,10 @@ public class CompanyGenerator {
 	private static final int MIN_NUMBER_OF_EMPLOYEES = 1;
 	private static final int MAX_NUMBER_OF_EMPLOYEES_MINUS_ONE = 10;
 	private final FileLinesLoader fileLinesLoader;
-	private final PersonGenerator employeeGenerator;
+	private final EmployeeGenerator employeeGenerator;
 	private static final Random random = new Random();
 
-	public CompanyGenerator(FileLinesLoader fileLinesLoader, PersonGenerator employeeGenerator) {
+	public CompanyGenerator(FileLinesLoader fileLinesLoader, EmployeeGenerator employeeGenerator) {
 		this.fileLinesLoader = fileLinesLoader;
 		this.employeeGenerator = employeeGenerator;
 	}
@@ -36,8 +36,8 @@ public class CompanyGenerator {
 		return new Company(name, generateEmployees());
 	}
 
-	private List<Person> generateEmployees() {
-		return employeeGenerator.generatePersons();
+	private List<Employee> generateEmployees() {
+		return employeeGenerator.generate(randomNumberOfEmployees());
 	}
 
 	private int randomNumberOfEmployees() {
@@ -52,4 +52,3 @@ public class CompanyGenerator {
 		return null;
 	}
 }
-
