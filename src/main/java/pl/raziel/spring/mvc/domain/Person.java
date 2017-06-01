@@ -50,4 +50,8 @@ public class Person {
 	public void setBirthDate(String birthDate) {
 		this.birthDate = birthDate;
 	}
+
+	public Long getId() {
+		return id;
+	}
 }

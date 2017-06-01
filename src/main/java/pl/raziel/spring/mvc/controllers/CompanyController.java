@@ -41,7 +41,7 @@ public class CompanyController {
 				.collect(Collectors.toList());
 	}
 
-	@GetMapping("{companyName}/${urls.company.employees.root}/{lastName}/{firstName}")
+	@GetMapping("{companyName}/${urls.company.employees.root}/{lastName}/{firstName:[a-zA-Z]+}")
 	List<Person> findCompanyEmployeesWithLastNameAndFirstName(@PathVariable Map<String, String> pathVariable) {
 		return findOne(pathVariable.get("companyName"))
 				.getEmployees()
@@ -49,5 +49,15 @@ public class CompanyController {
 				.filter(person -> Objects.equals(person.getSurname(), pathVariable.get("lastName")))
 				.filter(person -> Objects.equals(person.getName(), pathVariable.get("firstName")))
 				.collect(Collectors.toList());
+	}
+
+	@GetMapping("{companyName}/employees/{employeeId:\\d+}")
+	Person findCompanyPersonWithId(@PathVariable String companyName, @PathVariable long employeeId) {
+		return findOne(companyName)
+				.getEmployees()
+				.stream()
+				.filter(person -> person.getId() == employeeId)
+				.findAny()
+				.orElse(null);
 	}
 }
