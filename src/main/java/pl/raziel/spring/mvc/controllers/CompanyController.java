@@ -2,10 +2,12 @@ package pl.raziel.spring.mvc.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,26 +17,32 @@ import pl.raziel.spring.mvc.repositories.CompanyRepository;
 import pl.raziel.spring.mvc.requests.AddEmployeesRequest;
 
 import java.math.BigDecimal;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-
-@RequestMapping(value = "${urls.company.root}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = "companies", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 @RestController
 public class CompanyController {
-
 	@Autowired
 	private CompanyRepository companyRepository;
 
 	@GetMapping
-	List<Company> findAll() {
+	List<Company> findAll(
+			Locale locale,
+			ZoneId zoneId,
+			@CookieValue("my_cookie") String my_cookie,
+			@RequestHeader Map<String, String> headers,
+			@RequestHeader("host") String client
+	) {
 		return companyRepository.findAll();
 	}
 
-	@GetMapping("/{companyName}")
+	@GetMapping(value = "/{companyName}", produces = MediaType.APPLICATION_XML_VALUE)
 	Company findOne(@PathVariable("companyName") String name) {
 		return companyRepository.findByName(name);
 	}
@@ -73,7 +81,7 @@ public class CompanyController {
 				.collect(Collectors.toList());
 	}
 
-	@PostMapping("{companyName}/employees/create")
+	@PostMapping("{companyName}/employees")
 	Employee addEmployee(
 			@PathVariable String companyName,
 			@RequestParam(value = "firstName", required = true) String name,
@@ -89,17 +97,20 @@ public class CompanyController {
 		return employee;
 	}
 
-	@PostMapping(value = "{companyName}/employees", produces = MediaType.APPLICATION_XML_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	List<Employee> addEmployees(@PathVariable String companyName, @RequestBody AddEmployeesRequest request) {
-
-		final Company company = companyRepository.findByName(companyName);
-		List<Employee> employees = new ArrayList<>(company.getEmployees());
-		final List<Employee> newEmployees = createEmployees(request.getEmployees());
+	@PostMapping(
+			value = "{companyName}/employees/create",
+			produces = MediaType.APPLICATION_XML_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	List<Employee> addEmployees(
+			@PathVariable String companyName,
+			@RequestBody AddEmployeesRequest request
+	) {
+		Company original = companyRepository.findByName(companyName);
+		List<Employee> employees = new ArrayList<>(original.getEmployees());
+		List<Employee> newEmployees = createEmployees(request.getEmployees());
 		employees.addAll(newEmployees);
-
-		Company newCompany = new Company(company.getName(), employees);
+		Company newCompany = new Company(original.getName(), employees);
 		companyRepository.save(newCompany);
-
 		return newEmployees;
 	}
 
@@ -108,11 +119,10 @@ public class CompanyController {
 				.stream()
 				.map(employee ->
 						new Employee(
-								employee.getId(),
+								Employee.getNextEmployeeId(),
 								employee.getFirstName(),
 								employee.getLastName(),
 								employee.getSalary()))
 				.collect(Collectors.toList());
 	}
-
 }

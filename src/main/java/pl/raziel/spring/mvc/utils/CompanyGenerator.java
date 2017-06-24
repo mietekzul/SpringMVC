@@ -27,7 +27,7 @@ public class CompanyGenerator {
 		return fileLinesLoader
 				.loadLinesShuffled("companies")
 				.stream()
-				.limit(randomNumberOfCompanies())
+				.limit(20)
 				.map(this::generateCompany)
 				.collect(Collectors.toList());
 	}

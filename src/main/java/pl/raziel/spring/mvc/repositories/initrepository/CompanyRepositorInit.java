@@ -25,5 +25,7 @@ public class CompanyRepositorInit implements CommandLineRunner {
 
 		companies.forEach(company -> companyRepository.save(company));
 
+		System.out.println(companyRepository.findAll());
+
 	}
 }
